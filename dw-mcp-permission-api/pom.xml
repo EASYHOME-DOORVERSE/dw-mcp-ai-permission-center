@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.easyhome</groupId>
+        <artifactId>dw-mcp-ai-permission-center</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
+    <artifactId>dw-mcp-permission-api</artifactId>
+    <packaging>jar</packaging>
+    <name>DW MCP Permission API</name>
+    <description>MCP权限管理中心 - API接口声明模块（Feign Client + DTO/VO）</description>
+
+    <dependencies>
+        <!-- Spring Cloud OpenFeign（仅声明接口，不需要 starter 完整功能） -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+            <!-- api 模块只做接口声明，provided 级别由调用方决定是否启用 Feign -->
+            <optional>true</optional>
+        </dependency>
+        <!-- JSR-303 校验注解（DTO 中使用） -->
+        <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+        </dependency>
+    </dependencies>
+
+    <!-- api 模块不需要打 SpringBoot fat-jar，跳过 repackage -->
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

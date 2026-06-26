@@ -1,0 +1,158 @@
+spring:
+  application:
+    name: mcp-permission-center
+
+  # ================================================================
+  # 数据源配置（Dynamic-Datasource 多数据源）
+  # master：权限管理数据库（用户/角色/Key/工具定义等元数据）
+  # 业务数据源在 mcp_datasource 表中动态加载，运行时注册
+  # ================================================================
+  datasource:
+    dynamic:
+      primary: master          # 默认数据源
+      strict: false            # 非严格模式（找不到指定数据源时降级到主数据源）
+      datasource:
+        master:
+          url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/dw_mcp_permission?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
+          username: ${MYSQL_USER:}
+          password: ${MYSQL_PASSWORD:}
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          hikari:
+            minimum-idle: 5
+            maximum-pool-size: 20
+            idle-timeout: 30000
+            connection-timeout: 30000
+            pool-name: HikariPool-Master
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      database: 1
+      timeout: 3000ms
+      lettuce:
+        pool:
+          max-active: 16
+          max-idle: 8
+          min-idle: 2
+          max-wait: 2000ms
+  # ================================================================
+  # SMTP 邮件配置（忘记密码验证码发送）
+  # 支持 QQ邮箱 / 163邮箱 / 企业邮箱 / Gmail 等，按实际服务商填写
+  # ================================================================
+  mail:
+    host: ${MAIL_HOST:smtp.qiye.aliyun.com}
+    port: ${MAIL_PORT:465}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    default-encoding: UTF-8
+    properties:
+      mail:
+        smtp:
+          auth: true
+          ssl:
+            enable: true
+
+  # ================================================================
+  # Spring AI 模型配置（AI 一键生成工具配置）
+  # ================================================================
+  # 默认使用阿里云 DashScope 通义千问（OpenAI 兼容模式）
+  # 如需切换其他厂商，只需改以下环境变量即可，无需改代码：
+  #   - OPENAI_API_KEY  → 模型 API Key
+  #   - OPENAI_BASE_URL → 兼容端点 Base URL
+  #   - OPENAI_MODEL    → 模型名称
+  # ================================================================
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY:}
+      base-url: ${OPENAI_BASE_URL:https://api.openai.com/v1}
+      # OkHttp 整体请求超时（含流式响应接收），默认约60s，AI推理需适当放宽
+      # Spring AI 2.0.0 对应 AbstractOpenAiProperties.timeout 字段
+      timeout: 600s
+      # 关闭自动重试，避免流式超时后重复请求浪费资源
+      max-retries: 0
+      chat:
+        options:
+          model: ${OPENAI_MODEL:qwen3.6-plus}
+          temperature: 0.2
+
+  # ================================================================
+  # Spring AI MCP Server 配置
+  # ================================================================
+    mcp:
+      server:
+        name: dw-mcp-permission-server
+        version: 1.0.0
+        protocol: STATELESS #无状态模式
+        type: SYNC #同步模式
+        instructions: |
+          本服务器提供基于RBAC权限控制的数据查询工具。
+          不同用户根据其角色可访问不同的数据查询功能。
+
+# ================================================================
+# MyBatis-Plus 配置
+# ================================================================
+mybatis-plus:
+  configuration:
+    # 驼峰命名转换（数据库 user_id → Java userId）
+    map-underscore-to-camel-case: true
+    # 开发环境打印 SQL 日志
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+  global-config:
+    db-config:
+      id-type: auto
+      # 全局逻辑删除配置：所有带 @TableLogic 的字段自动生效
+      # 自动在 SELECT 加 WHERE is_deleted=0；DELETE 改写为 UPDATE SET is_deleted=1
+      logic-delete-field: isDeleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+# ================================================================
+# JWT 配置（管理端账号密码登录）
+# 多机部署时所有节点需配置相同的 jwt.secret
+# ================================================================
+jwt:
+  # HMAC-SHA256 密钥，生产环境务必改为强随机字符串（至少 256 bits）
+  secret: ${JWT_SECRET:}
+  # Token 过期时间（毫秒），默认 2 小时
+  expiration-ms: 7200000
+
+# ================================================================
+# 日志配置
+# ================================================================
+logging:
+  level:
+    com.easyhome: DEBUG
+    com.easyhome.mapper: DEBUG
+    org.springframework.security: INFO
+    org.springframework.ai: INFO
+    com.zaxxer.hikari: DEBUG
+    com.zaxxer.hikari.pool: DEBUG
+  pattern:
+    console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+
+# ================================================================
+# Actuator（健康检查，SecurityConfig 中已配置为公开访问）
+# ================================================================
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: when-authorized
+
+# ================================================================
+# CORS 配置（生产环境请配置具体域名，多个用逗号分隔）
+# ================================================================
+cors:
+  allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173}
+
+server:
+  port: 8091
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
