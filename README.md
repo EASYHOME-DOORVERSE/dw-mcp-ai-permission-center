@@ -2,7 +2,8 @@
 
 # DW MCP AI Permission Center
 
-基于 RBAC 的 MCP（Model Context Protocol）权限管理中心，为 AI 客户端提供动态工具列表与数据访问控制。
+DW MCP AI Permission Center 是一套专为 Model Context Protocol（MCP）打造、基于标准 RBAC 权限模型的企业级 AI 工具权限管控中台。
+内置 JDBC 数据源代理、HTTP 接口代理能力，可自动将数据库 SQL、业务 HTTP 接口一键转换为标准化 MCP 工具；面向 Cursor、Claude Desktop、各类自研 AI Agent 客户端提供统一接入鉴权、工具可见性隔离、多数据源访问权限拦截能力，一站式解决多用户、多 AI 客户端共用 MCP 工具时权限混乱、数据越权、密钥管理失控、工具无分级管控等核心痛点。
 
 ## 功能概述
 

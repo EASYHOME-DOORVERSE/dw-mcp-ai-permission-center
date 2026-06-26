@@ -2,7 +2,8 @@
 
 # DW MCP AI Permission Center
 
-An RBAC-based MCP (Model Context Protocol) permission management center that provides AI clients with dynamic tool lists and data access control.
+DW MCP AI Permission Center is an enterprise-grade AI tool access control middleware built exclusively for the Model Context Protocol (MCP) and grounded on the standard RBAC permission model.
+It comes with built-in JDBC data source proxy and HTTP interface proxy capabilities, enabling one-click conversion of database SQL statements and business HTTP interfaces into standardized MCP tools. It delivers unified access authentication, tool visibility isolation, and multi-data-source access permission interception for Cursor, Claude Desktop, and all self-developed AI Agent clients. It addresses core pain points in a one-stop manner—including chaotic permissions, unauthorized data access, unregulated secret key management, and lack of hierarchical tool governance—arising from multiple users and AI clients sharing MCP tools.
 
 ## Feature Overview
 
