@@ -13,7 +13,7 @@ It comes with built-in JDBC data source proxy and HTTP interface proxy capabilit
 - **Role-Based Hierarchical Views**: Admins see all data; regular users only see tools and corresponding categories they have access to, with isolated endpoints to avoid permission denial.
 - **API Key Authentication**: Bearer Token format, compatible with mainstream MCP clients such as Claude Desktop and Cursor.
 - **JDBC Tool Execution**: Dynamic multi-datasource switching via Dynamic-Datasource, executing SQL templates and returning JSON results.
-- **HTTP Proxy Tools** (Planned): Proxy external HTTP interfaces as MCP tools.
+- **HTTP Proxy Tools**: Proxy external HTTP interfaces as MCP tools.
 - **Feign API Declarations**: Management interfaces are declared via OpenFeign for easy microservice invocation or Gateway proxy.
 - **AI One-Click Generation**: Input an SQL template, and AI streams tool names, descriptions, and JSON Schema generation in real time via SSE.
 - **Permission Caching**: Redis-based user permission cache + API Key validation cache, asynchronously cleared in batches when RBAC changes.
